@@ -2,17 +2,20 @@
   <div class="cart__item">
     <span class="cart__title">Нямушка с {{ item.title }}</span>
     <span class="cart__title"
-      >Целых <b>{{ item.volume * counter }}</b> кг</span
+      >Целых <b>{{ item.volume * item.qty }}</b> кг</span
     >
     <div class="cart__counter">
       <span @click="minusValue" class="cart__minus"
         ><i class="fa fa-minus-circle"></i
       ></span>
-      <span class="cart__value">{{ counter }}</span>
+      <span class="cart__value">{{ item.qty }}</span>
       <span @click="plusValue" class="cart__plus"
         ><i class="fa fa-plus-circle"></i
       ></span>
     </div>
+    <span @click="deleteItem" class="cart__delete"
+      ><i class="fa fa-trash"></i
+    ></span>
   </div>
 </template>
 
@@ -23,21 +26,16 @@ export default {
       type: Object
     }
   },
-  data() {
-    return {
-      counter: 1
-    }
-  },
+
   methods: {
     minusValue() {
-      if (this.counter === 1) {
-        this.counter = 1
-      } else {
-        this.counter--
-      }
+      this.$emit('minus-qty')
     },
     plusValue() {
-      this.counter++
+      this.$emit('plus-qty')
+    },
+    deleteItem() {
+      this.$emit('delete-item')
     }
   }
 }
@@ -61,6 +59,8 @@ export default {
     font-size: 1.6em;
     font-weight: 700;
     & b {
+      display: inline-block;
+      width: 40px;
       font-size: 1.4em;
       color: $blue;
     }
@@ -78,6 +78,11 @@ export default {
     user-select: none;
     font-weight: 500;
     font-variation-settings: 'wght' 500;
+  }
+  &__delete {
+    cursor: pointer;
+    color: $red;
+    font-size: 1.6em;
   }
 }
 </style>

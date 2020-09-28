@@ -2,20 +2,22 @@
   <div class="card__wrapper">
     <div
       :class="{
-        card__selected: selected,
+        card__selected: card.selected,
         card__disabled: card.quantity == 0
       }"
       class="card"
       @click="selectedCard(card)"
-      @mouseleave="hoverOnCard"
-      @mouseenter="enterOfCard"
+      @mouseleave="hoverOnCard(card)"
+      @mouseenter="enterOfCard(card)"
     >
-      <!-- @mouseenter="$emit('enter-card', card._id)" -->
-      <!-- @mouseleave="$emit('leave-card', card._id)" -->
-      <p v-if="!outHover" class="card__subtitle">
+      <!--   @mouseleave="hoverOnCard"
+      @mouseenter="enterOfCard" -->
+      <!--     @mouseenter="$emit('enter-card', card._id)"
+      @mouseleave="$emit('leave-card', card._id)" -->
+      <p v-if="!card.outHover" class="card__subtitle">
         {{ card.description }}
       </p>
-      <p v-if="outHover" class="card__subtitle card__subtitle--off">
+      <p v-if="card.outHover" class="card__subtitle card__subtitle--off">
         {{ card.descriptionOver }}
       </p>
       <h2 class="card__title">Нямушка</h2>
@@ -41,11 +43,11 @@
       </div>
     </div>
     <div class="card__buy">
-      <div v-if="!selected && card.quantity > 0">
+      <div v-if="!card.selected && card.quantity > 0">
         Чего сидишь? Порадуй котэ
         <span @click="selectedCard(card)" class="card__link">купи</span>
       </div>
-      <div v-if="selected && card.quantity > 0">
+      <div v-if="card.selected && card.quantity > 0">
         {{ card.footerText }}
       </div>
       <div v-if="card.quantity == 0">
@@ -56,34 +58,38 @@
 </template>
 
 <script>
+// import { mapGetters } from 'vuex'
 export default {
   props: {
     card: Object
   },
 
-  data() {
-    return {
-      selected: false,
-      outHover: false
-    }
-  },
+  // data() {
+  //   return {
+  //     selected: false,
+  //     outHover: false
+  //   }
+  // },
+  // computed: {
+  //   ...mapGetters(['selectedProduct'])
+  // },
   methods: {
     selectedCard(card) {
       if (+card.quantity === 0) {
         return
       }
-
+      this.$set(card, 'selected', true)
+      this.$set(card, 'outHover', false)
       this.$emit('selected-card', card)
-      this.selected = !this.selected
     },
-    hoverOnCard() {
-      if (this.selected && !this.outHover) {
-        this.outHover = !this.outHover
+    hoverOnCard(card) {
+      if (card.selected && !card.outHover) {
+        card.outHover = !card.outHover
       }
     },
-    enterOfCard() {
-      if (this.selected && this.outHover) {
-        this.outHover = !this.outHover
+    enterOfCard(card) {
+      if (card.selected && card.outHover) {
+        card.outHover = !card.outHover
       }
     }
   }

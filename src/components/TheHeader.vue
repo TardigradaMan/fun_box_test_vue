@@ -1,12 +1,16 @@
 <template>
   <header class="header">
     <h1 class="header__title">Ты сегодня покормил кота?</h1>
-    <span @click="openCart"><i class="fa fa-shopping-cart"></i></span>
-    <ProductsCart v-if="cart" />
+    <span class="header__cart" @click="openCart">
+      <i class="fa fa-shopping-cart"></i>
+    </span>
+    <span class="header__orders">{{ selectedProduct.length }}</span>
+    <ProductsCart :selectedProduct="selectedProduct" v-if="cart" />
   </header>
 </template>
 <script>
 import ProductsCart from './ProductsCart'
+import { mapGetters } from 'vuex'
 export default {
   components: {
     ProductsCart
@@ -15,6 +19,9 @@ export default {
     return {
       cart: false
     }
+  },
+  computed: {
+    ...mapGetters(['selectedProduct'])
   },
   methods: {
     openCart() {
@@ -27,7 +34,7 @@ export default {
 .header {
   position: relative;
   width: 100%;
-  // width: 100vw;
+
   &__title {
     color: #ffffff;
     font-size: 3.6em;
@@ -40,7 +47,7 @@ export default {
       padding: 20px 45px;
     }
   }
-  & > span {
+  &__cart {
     display: inline-block;
     position: absolute;
     top: 40px;
@@ -51,6 +58,29 @@ export default {
     @media screen and(max-width: $sm) {
       top: 30px;
       right: 20px;
+    }
+  }
+  &__orders {
+    display: flex;
+    // flex-direction: column;
+    // align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    width: 15px;
+    height: 15px;
+
+    background: #eee;
+    color: $blue;
+    font-size: 1.4em;
+    font-weight: 700;
+    line-height: 1em;
+    border-radius: 50%;
+    border: 2px solid $blue;
+    @media screen and(max-width: $sm) {
+      top: 30px;
+      right: 10px;
     }
   }
 }

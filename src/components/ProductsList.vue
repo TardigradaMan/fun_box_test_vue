@@ -5,10 +5,7 @@
     <div v-if="!loading" class="products">
       <div class="products__list">
         <ProductsCard
-          v-bind="$attrs"
-          @selected-card="selectedCard"
-          :selected="selected"
-          :outHover="outHover"
+          @selected-card="selectedCard(card)"
           :card="card"
           v-for="card in listCatFood"
           :key="card._id"
@@ -29,17 +26,13 @@ export default {
     AppError,
     AppLoading
   },
-  data() {
-    return {
-      selected: false,
-      outHover: false
-    }
-  },
+
   computed: {
     ...mapState({
       listCatFood: state => state.listCatFood,
       loading: state => state.loading,
-      error: state => state.error
+      error: state => state.error,
+      selectedProduct: state => state.selectedProduct
     })
   },
 
@@ -51,21 +44,19 @@ export default {
     async fetchListFood() {
       try {
         await this.$store.dispatch('getlistCatFood')
-        // this.isLoading = false
       } catch (error) {
         console.log(error)
       }
     },
+
     selectedCard(product) {
-      if (product.quantity == 0) {
-        return
-      } else {
+      if (product.quantity > 0) {
         const newSelectedProduct = {
           title: product.title,
           _id: product._id,
-          volume: product.volume
+          volume: product.volume,
+          qty: 1
         }
-
         this.$store.commit('SELECT_PRODUCT', newSelectedProduct)
       }
     }
